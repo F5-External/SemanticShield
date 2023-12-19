@@ -12,7 +12,11 @@ class ModerationException(http.client.HTTPException):
         super().__init__(self.description)
 
 class APIKEYException(Exception):
-    """Exception raised when OpenAI key is missing."""
+    """Exception raised when OpenAI keys are missing."""
+    pass
+
+class APIENGINEException(Exception):
+    """Exception raised when OpenAI engine is missing."""
     pass
 
 class InvalidParametersException(Exception):
