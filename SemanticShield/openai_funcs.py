@@ -9,6 +9,7 @@ from SemanticShield.openai_settings import OpenAISettings
 
 ENGINE=OpenAISettings.ENGINE
 CHAT_ENGINE=OpenAISettings.CHAT_ENGINE
+AZURE_CHAT_ENGINE=OpenAISettings.AZURE_CHAT_ENGINE
 MODEL = OpenAIModel.CHAT_GPT
 
 initialized = False
@@ -17,7 +18,16 @@ def init_openai_key():
     if not initialized:
         if 'OPENAI_API_KEY' not in os.environ:
             raise APIKEYException(f"OPENAI key not set")
+        elif 'OPENAI_API_TYPE' not in os.environ:
+            raise APIKEYException(f"OPENAI type not set")
+        elif 'OPENAI_API_BASE' not in os.environ:
+            raise APIKEYException(f"OPENAI base not set")
+        elif 'OPENAI_API_VERSION' not in os.environ:
+            raise APIKEYException(f"OPENAI version not set")
         openai.api_key = os.environ['OPENAI_API_KEY']
+        openai.api_type = os.environ['OPENAI_API_TYPE']
+        openai.api_base = os.environ['OPENAI_API_BASE']
+        openai.api_version = os.environ['OPENAI_API_VERSION']
         initialized = True
 
 def moderate_prompt(prompt: str):
@@ -53,7 +63,7 @@ def run_prompt(prompt: str, max_tokens: int = 100, temperature: float = 0.7, cha
         if backup_chat_create:
             func = backup_chat_create
         response = func(
-            model=CHAT_ENGINE,
+            engine=AZURE_CHAT_ENGINE,
             temperature=temperature,
             messages=[{
                 "role": "user",
